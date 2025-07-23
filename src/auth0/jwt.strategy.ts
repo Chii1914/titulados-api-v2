@@ -4,6 +4,7 @@ import { ExtractJwt, Strategy } from 'passport-jwt';
 import { passportJwtSecret } from 'jwks-rsa';
 import * as dotenv from 'dotenv';
 dotenv.config();
+
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
     constructor() {

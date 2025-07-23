@@ -19,6 +19,6 @@ async function bootstrap() {
       transform: true,              //Transforma los datos que recibe a los tipos que se le indican
     })
   );
-  await app.listen(process.env.OPERATION_PORT || 3000);
+  await app.listen(process.env.PORT || 4000);
 }
 bootstrap();
