@@ -1,0 +1,74 @@
+# .github/workflows/ci-cd.yml
+name: Monorepo CI/CD
+
+on:
+  push:
+    branches: #Branch que mira
+      - master
+    paths:
+      - "src/**" 
+  pull_request:
+    branches:
+      - master
+    paths:
+      - "src/**"
+
+jobs:
+  build-and-push:
+    runs-on: self-hosted
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Build and push NestJS Pub/Sub Service Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: ./services/pub-sub
+          file: ./services/pub-sub/Dockerfile
+          push: true
+          tags: |
+            ${{ secrets.DOCKER_USERNAME }}/pub-sub:latest
+            ${{ secrets.DOCKER_USERNAME }}/pub-sub:${{ github.sha }}
+          build-args: |
+            JWT_SECRET=${{ secrets.JWT_SECRET }}
+            REDIS_HOST=${{ secrets.REDIS_HOST }}
+            REDIS_PORT=${{ secrets.REDIS_PORT }}
+            REDIS_PASSWORD=${{ secrets.REDIS_PASSWORD }}
+
+  deploy:
+    runs-on: self-hosted
+    needs: 
+      - build-and-push
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Log in to Docker Hub for deployment
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+
+      - name: Pull and Deploy Docker Compose Services
+        working-directory: . 
+        env:
+          JWT_SECRET: ${{ secrets.JWT_SECRET }}
+          TARGET_SERVICE_URL: http://localhost:3004
+          REDIS_HOST: localhost
+          REDIS_PORT: 6379
+          REDIS_PASSWORD: ${{ secrets.REDIS_PASSWORD }}
+        run: |
+          echo "Stopping existing services..."
+          docker compose down --remove-orphans || true # '|| true' prevents failure if no services are running
+          echo "Pulling latest images..."
+          docker compose pull
+          echo "Starting new services..."
+          docker compose up -d
+          echo "Deployment complete!"

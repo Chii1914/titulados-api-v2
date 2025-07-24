@@ -5,7 +5,7 @@ import { EstudianteService } from 'src/estudiante/estudiante.service';
 import { JefaturaService } from 'src/jefatura/jefatura.service';
 import { ProfesorService } from 'src/profesor/profesor.service';
 import { SecretarioService } from 'src/secretario/secretario.service';
-
+import { UserTypeGuard} from 'src/common/roles/user-type.guard';
 @Controller('user')
 export class UserController {
     constructor(
@@ -41,6 +41,7 @@ export class UserController {
         }
         return res.status(403).json({ message: 'Unauthorized' });
     }
+    @UseGuards(AuthGuard('jwt'), UserTypeGuard('profesor'))
     @Get('test')
     async test() {
         return { message: 'Test successful' };
