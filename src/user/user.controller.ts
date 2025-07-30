@@ -41,6 +41,7 @@ export class UserController {
         }
         return res.status(403).json({ message: 'Unauthorized' });
     }
+    
     @UseGuards(AuthGuard('jwt'), UserTypeGuard('profesor'))
     @Get('test')
     async test() {
