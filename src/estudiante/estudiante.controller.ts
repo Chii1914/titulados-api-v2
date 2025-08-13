@@ -1,35 +1,18 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, UseInterceptors, UploadedFile } from '@nestjs/common';
 import { EstudianteService } from './estudiante.service';
 import { CreateEstudianteDto } from './dto/create-estudiante.dto';
 import { UpdateEstudianteDto } from './dto/update-estudiante.dto';
 import { AuthGuard } from '@nestjs/passport';
-
+import { FilesService } from 'src/files/files.service';
+import { User } from 'src/decorators/getUser.decorator';
+import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
+import { UserTypeGuard } from 'src/common/roles/user-type.guard';
 @Controller('estudiante')
 export class EstudianteController {
-  constructor(private readonly estudianteService: EstudianteService) {}
-
-  @Post()
-  create(@Body() createEstudianteDto: CreateEstudianteDto) {
-    return this.estudianteService.create(createEstudianteDto);
-  }
-
+  constructor(private readonly estudianteService: EstudianteService){}
   @Get()
-  findAll() {
+  getAll() {
     return this.estudianteService.findAll();
   }
-
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.estudianteService.findOne(+id);
-  }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateEstudianteDto: UpdateEstudianteDto) {
-    return this.estudianteService.update(+id, updateEstudianteDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.estudianteService.remove(+id);
-  }
+ 
 }

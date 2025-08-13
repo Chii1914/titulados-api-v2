@@ -5,6 +5,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Profesor } from './entities/Profesor.entity';
 import { JwtModule } from '@nestjs/jwt';
 
+@Global()
 @Module({
   imports: [TypeOrmModule.forFeature([Profesor]), JwtModule.register({
       secret: process.env.JWT_SECRET_KEY,

@@ -7,9 +7,9 @@ import { Repository } from 'typeorm';
 
 @Injectable()
 export class EstudianteService {
-   constructor(
-          @InjectRepository(Estudiante) private readonly estudianteRepository: Repository<Estudiante>,
-      ) { }
+  constructor(
+    @InjectRepository(Estudiante) private readonly estudianteRepository: Repository<Estudiante>,
+  ) { }
   create(createEstudianteDto: CreateEstudianteDto) {
     return 'This action adds a new estudiante';
   }
@@ -18,8 +18,8 @@ export class EstudianteService {
     return this.estudianteRepository.find();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} estudiante`;
+  findOne(mail: string) {
+    return this.estudianteRepository.findOne({ where: { mail } });
   }
 
   update(id: number, updateEstudianteDto: UpdateEstudianteDto) {

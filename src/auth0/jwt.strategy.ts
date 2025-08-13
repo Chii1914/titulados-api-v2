@@ -2,12 +2,22 @@ import { Injectable, Scope } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import { passportJwtSecret } from 'jwks-rsa';
+import { EstudianteService } from '../estudiante/estudiante.service';
+import { JefaturaService } from '../jefatura/jefatura.service';
+import { ProfesorService } from '../profesor/profesor.service';
+import { SecretarioService } from '../secretario/secretario.service';
+
 import * as dotenv from 'dotenv';
 dotenv.config();
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
-    constructor() {
+    constructor(
+        private readonly estudianteService: EstudianteService,
+        private readonly jefaturaService: JefaturaService,
+        private readonly profesorService: ProfesorService,
+        private readonly secretarioService: SecretarioService
+    ) {
         // allow JWT-formatted tokens to be parsed
         // and RSA56 signed tokens to be accepted
         super({
@@ -25,11 +35,33 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     }
     // auth0 will have authenticated the user and the payload will give us
     // information about the user which we can abtract such as the sub
-    validate(payload: any) {
+    async validate(payload: any) {
+
+        const userMail = payload['https://api.myapp.com/email'];
+
+        const estudiante = await this.estudianteService.findOne(userMail);
+        const jefatura = await this.jefaturaService.findOne(userMail);
+        const docente = await this.profesorService.findOne(userMail);
+        const secretario = await this.secretarioService.findOne(userMail);
+        if (estudiante) {
+            return { userId: payload.sub, email: userMail} /*estudiante.sede };*/
+        }
+            if (jefatura) {
+            return { userId: payload.sub, email: userMail } 
+        }
+            if (docente) {
+            return { userId: payload.sub, email: userMail }
+        }
+            if (secretario) {
+            return { userId: payload.sub, email: userMail }
+        }
+
+
+
         return {
             userId: payload.sub,
             email: payload['https://api.myapp.com/email'], // Make sure this matches the custom claim from Auth0
         };
     }
-    
+
 }
