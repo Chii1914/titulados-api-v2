@@ -17,9 +17,9 @@ export class ProfesorController {
     return this.profesorService.findAll();
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.profesorService.findOne(+id);
+  @Get(':mail')
+  findOne(@Param('mail') mail: string) {
+    return this.profesorService.findOne(mail);
   }
 
   @Patch(':id')

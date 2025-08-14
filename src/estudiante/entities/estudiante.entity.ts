@@ -25,8 +25,22 @@ export class Estudiante {
   @Column("varchar", { name: "rut", unique: true, length: 20 })
   rut: string;
 
-  @Column("varchar", { name: "codigo", unique: true, length: 50 })
+  @Column("varchar", { name: "codigo", length: 50 })
   codigo: string;
+
+  @Column("enum", {
+    name: "sede",
+    nullable: true,
+    enum: ["valparaiso", "santiago", "sanFelipe"],
+  })
+  sede: "valparaiso" | "santiago" | "sanFelipe" | null;
+
+  @Column("date", {
+    name: "addedAt",
+    nullable: true,
+    default: () => "'curdate()'",
+  })
+  addedAt: string | null;
 
   @Column("int", { name: "agnoIngreso", nullable: true })
   agnoIngreso: number | null;
