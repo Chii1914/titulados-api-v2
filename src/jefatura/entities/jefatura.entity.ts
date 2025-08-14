@@ -14,7 +14,7 @@ export class Jefatura {
   @Column("enum", {
     name: "sede",
     nullable: true,
-    enum: ["valparaiso", "santiago", "sanFelipe"],
+    enum: ["valparaiso", "santiago", "sanFelipe", "all"],
   })
-  sede: "valparaiso" | "santiago" | "sanFelipe" | null;
+  sede: "valparaiso" | "santiago" | "sanFelipe" | "all" | null;
 }

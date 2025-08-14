@@ -17,7 +17,7 @@ export class EstudianteController {
   }
   @UseGuards(AuthGuard('jwt'))
   @Get('sede-estado')
-  async getEstudiantesSedeEstado(@Body () body: { sede: string }, @Sede() sede: string) {
-    return await this.estudianteService.getStudiantesSedeEstado(body.sede, sede);
-  } 
+  async getEstudiantesSedeEstado(@Body () body: { estado: string }, @Sede() sede: string) {
+    return await this.estudianteService.getStudiantesSedeEstado(body.estado, sede);
+  }
 }

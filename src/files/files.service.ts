@@ -137,6 +137,7 @@ export class FilesService {
             nombre: string;
             apellido: string;
             agnoIngreso: number;
+            sede: string;
             [key: string]: any;
         }
         const studentsData = xlsx.utils.sheet_to_json<StudentExcelRow>(worksheet);
@@ -153,9 +154,11 @@ export class FilesService {
             const codigo = student['Código carrera'];
             const agnoIngreso = student['Año ingreso'];
             const mail = student['Correo'];
+            const sede = student['Sede'];
             const existingStudent = await this.estudianteRepository.findOne({
-                where: { rut: rut, mail: mail },
+                where: { rut: rut },
             });
+            
             if (existingStudent) {
                 skippedStudents.push(`${existingStudent.nombre} ${existingStudent.apellido} (${existingStudent.rut})`);
             } else {
@@ -166,6 +169,7 @@ export class FilesService {
                     !codigo ||
                     !mail ||
                     !agnoIngreso ||
+                    !sede ||
                     !Number.isInteger(Number(agnoIngreso))
                 ) {
                     badFormatStudents.push(`${nombre} ${apellido} (${rut})`);
@@ -180,6 +184,7 @@ export class FilesService {
                     codigo: codigo,
                     mail: mail,
                     agnoIngreso: agnoIngreso,
+                    sede: sede,
                 });
                 studentsToSave.push(newStudent);
                 addedStudents.push(`${newStudent.nombre} ${newStudent.apellido} (${newStudent.rut})`);

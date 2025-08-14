@@ -14,7 +14,7 @@ export class Secretario {
   @Column("enum", {
     name: "sede",
     nullable: true,
-    enum: ["valparaiso", "santiago", "sanFelipe"],
+    enum: ["valparaiso", "santiago", "sanFelipe", "all"],
   })
   sede: "valparaiso" | "santiago" | "sanFelipe" | null;
 }

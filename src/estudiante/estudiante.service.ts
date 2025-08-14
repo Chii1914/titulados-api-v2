@@ -4,6 +4,7 @@ import { UpdateEstudianteDto } from './dto/update-estudiante.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Estudiante } from './entities/estudiante.entity';
 import { Repository } from 'typeorm';
+import { Estados } from 'src/estados/entities/estado.entity';
 
 @Injectable()
 export class EstudianteService {
@@ -22,23 +23,25 @@ export class EstudianteService {
     return this.estudianteRepository.findOne({ where: { mail } });
   }
 
-  getStudiantesSedeEstado(sede: any, estado: string) {
-    console.log(sede)
-    if (sede != 'valparaiso' && sede != 'santiago' && sede != 'sanFelipe') {
-      throw new Error('Sede no válida');
+  async getStudiantesSedeEstado(estado: string, sede: string) {
+    if (sede === 'all') {
+      return await this.estudianteRepository.createQueryBuilder('estudiante')
+        .innerJoin(Estados, 'estados', 'estudiante.mail = estados.mailEstudiante')
+        .andWhere('estados.estado = :estado', { estado })
+        .getMany();
     }
-    return this.estudianteRepository.createQueryBuilder('estudiante')
-      .innerJoin('estados', 'estados', 'estados.mailEstudiante = estudiante.mail')
-      .where('estudiante.sede = :sede', { sede })
-      .andWhere('estudiante.estado = :estado', { estado })
-      .getMany();
-    }
-
-    update(id: number, updateEstudianteDto: UpdateEstudianteDto) {
-    return `This action updates a #${id} estudiante`;
-    }
-
-    remove(id: number) {
-    return `This action removes a #${id} estudiante`;
-    }
+    return await this.estudianteRepository.createQueryBuilder('estudiante')
+      .innerJoin(Estados, 'estados', 'estudiante.mail = estados.mailEstudiante')
+      .andWhere('estados.estado = :estado', { estado })
+      .andWhere('estudiante.sede = :sede', { sede })
+      .getMany()
   }
+
+  update(id: number, updateEstudianteDto: UpdateEstudianteDto) {
+    return `This action updates a #${id} estudiante`;
+  }
+
+  remove(id: number) {
+    return `This action removes a #${id} estudiante`;
+  }
+}
