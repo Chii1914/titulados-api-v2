@@ -44,23 +44,22 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
         const docente = await this.profesorService.findOne(userMail);
         const secretario = await this.secretarioService.findOne(userMail);
         if (estudiante) {
-            return { userId: payload.sub, email: userMail} /*estudiante.sede };*/
+            return { userId: payload.sub, email: userMail, sede: estudiante.sede }
         }
-            if (jefatura) {
-            return { userId: payload.sub, email: userMail } 
+        if (jefatura) {
+            return { userId: payload.sub, email: userMail, sede: jefatura.sede }
         }
-            if (docente) {
-            return { userId: payload.sub, email: userMail }
+        if (docente) {
+            return { userId: payload.sub, email: userMail, sede: docente.sede }
         }
-            if (secretario) {
-            return { userId: payload.sub, email: userMail }
+        if (secretario) {
+            return { userId: payload.sub, email: userMail, sede: secretario.sede }
         }
-
-
 
         return {
             userId: payload.sub,
             email: payload['https://api.myapp.com/email'], // Make sure this matches the custom claim from Auth0
+            sede: null
         };
     }
 

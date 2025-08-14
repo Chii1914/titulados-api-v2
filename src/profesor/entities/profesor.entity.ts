@@ -1,9 +1,10 @@
+import { forwardRef } from '@nestjs/common';
 import { Column, Entity, OneToMany } from "typeorm";
 import { Asignaciones } from "../../asignaciones/entities/asignacione.entity";
 
 @Entity("profesor", { schema: "tituladosv2" })
 export class Profesor {
-  @Column("varchar", { primary: true, name: "mail", length: 255 })
+ @Column("varchar", { primary: true, name: "mail", length: 255 })
   mail: string;
 
   @Column("varchar", { name: "nombre", length: 100 })

@@ -22,11 +22,23 @@ export class EstudianteService {
     return this.estudianteRepository.findOne({ where: { mail } });
   }
 
-  update(id: number, updateEstudianteDto: UpdateEstudianteDto) {
-    return `This action updates a #${id} estudiante`;
-  }
+  getStudiantesSedeEstado(sede: any, estado: string) {
+    console.log(sede)
+    if (sede != 'valparaiso' && sede != 'santiago' && sede != 'sanFelipe') {
+      throw new Error('Sede no válida');
+    }
+    return this.estudianteRepository.createQueryBuilder('estudiante')
+      .innerJoin('estados', 'estados', 'estados.mailEstudiante = estudiante.mail')
+      .where('estudiante.sede = :sede', { sede })
+      .andWhere('estudiante.estado = :estado', { estado })
+      .getMany();
+    }
 
-  remove(id: number) {
+    update(id: number, updateEstudianteDto: UpdateEstudianteDto) {
+    return `This action updates a #${id} estudiante`;
+    }
+
+    remove(id: number) {
     return `This action removes a #${id} estudiante`;
+    }
   }
-}
