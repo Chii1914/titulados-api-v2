@@ -15,9 +15,22 @@ export class EstudianteController {
   getAll() {
     return this.estudianteService.findAll();
   }
+
   @UseGuards(AuthGuard('jwt'))
   @Get('sede-estado')
   async getEstudiantesSedeEstado(@Body () body: { estado: string }, @Sede() sede: string) {
     return await this.estudianteService.getStudiantesSedeEstado(body.estado, sede);
+  }
+
+  @UseGuards(AuthGuard('jwt'))
+  @Get('sede')
+  async getEstudiantesSede(@Sede() sede: string) {
+    return await this.estudianteService.getStudiantesSede(sede);
+  }
+   
+  @UseGuards(AuthGuard('jwt'))
+  @Get('estado')
+  async getEstudiantesEstado(@Body() body: { estado: string }) {
+    return await this.estudianteService.getStudianteEstado(body.estado, 'all');
   }
 }

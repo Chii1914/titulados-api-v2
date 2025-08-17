@@ -37,6 +37,19 @@ export class EstudianteService {
       .getMany()
   }
 
+  async getStudiantesSede(sede: string) {
+    return await this.estudianteRepository.createQueryBuilder('estudiante')
+      .where('estudiante.sede = :sede', { sede })
+      .getMany();
+  }
+  
+  async getStudianteEstado(estado: string, mail: string) {
+    return await this.estudianteRepository.createQueryBuilder('estudiante')
+      .innerJoin(Estados, 'estados', 'estudiante.mail = estados.mailEstudiante')
+      .andWhere('estados.estado = :estado', { estado })
+      .getMany();
+  }
+
   update(id: number, updateEstudianteDto: UpdateEstudianteDto) {
     return `This action updates a #${id} estudiante`;
   }
