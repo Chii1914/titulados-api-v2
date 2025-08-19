@@ -1,35 +1,36 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, UseInterceptors, UploadedFile } from '@nestjs/common';
 import { EstudianteService } from './estudiante.service';
 import { CreateEstudianteDto } from './dto/create-estudiante.dto';
 import { UpdateEstudianteDto } from './dto/update-estudiante.dto';
 import { AuthGuard } from '@nestjs/passport';
-
+import { FilesService } from 'src/files/files.service';
+import { User } from 'src/decorators/getUser.decorator';
+import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
+import { UserTypeGuard } from 'src/common/roles/user-type.guard';
+import { Sede } from 'src/decorators/sede.decorator';
 @Controller('estudiante')
 export class EstudianteController {
-  constructor(private readonly estudianteService: EstudianteService) {}
-
-  @Post()
-  create(@Body() createEstudianteDto: CreateEstudianteDto) {
-    return this.estudianteService.create(createEstudianteDto);
-  }
-
+  constructor(private readonly estudianteService: EstudianteService){}
   @Get()
-  findAll() {
+  getAll() {
     return this.estudianteService.findAll();
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.estudianteService.findOne(+id);
+  @UseGuards(AuthGuard('jwt'))
+  @Get('sede-estado')
+  async getEstudiantesSedeEstado(@Body () body: { estado: string }, @Sede() sede: string) {
+    return await this.estudianteService.getStudiantesSedeEstado(body.estado, sede);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateEstudianteDto: UpdateEstudianteDto) {
-    return this.estudianteService.update(+id, updateEstudianteDto);
+  @UseGuards(AuthGuard('jwt'))
+  @Get('sede')
+  async getEstudiantesSede(@Sede() sede: string) {
+    return await this.estudianteService.getStudiantesSede(sede);
   }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.estudianteService.remove(+id);
+   
+  @UseGuards(AuthGuard('jwt'))
+  @Get('estado')
+  async getEstudiantesEstado(@Body() body: { estado: string }) {
+    return await this.estudianteService.getStudianteEstado(body.estado, 'all');
   }
 }

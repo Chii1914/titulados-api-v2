@@ -10,7 +10,11 @@ export class Jefatura {
 
   @Column("varchar", { name: "apellido", length: 100 })
   apellido: string;
-
-  @Column("varchar", { name: "sede", nullable: true, length: 100 })
-  sede: string | null;
+  
+  @Column("enum", {
+    name: "sede",
+    nullable: true,
+    enum: ["valparaiso", "santiago", "sanFelipe", "all"],
+  })
+  sede: "valparaiso" | "santiago" | "sanFelipe" | "all" | null;
 }

@@ -8,6 +8,7 @@ import {
 } from "typeorm";
 import { Estudiante } from "../../estudiante/entities/estudiante.entity";
 import { Profesor } from "../../profesor/entities/profesor.entity";
+import { forwardRef } from '@nestjs/common';
 
 @Index("mailEstudiante", ["mailEstudiante", "mailProfesor", "rol"], {
   unique: true,

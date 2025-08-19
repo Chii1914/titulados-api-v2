@@ -9,7 +9,7 @@ import { JwtModule } from '@nestjs/jwt';
 @Module({
   imports: [TypeOrmModule.forFeature([Estudiante]), JwtModule.register({
     secret: process.env.JWT_SECRET_KEY,
-    signOptions: { expiresIn: '300m' },
+    signOptions: { expiresIn: '300m' }, 
   }),],
   controllers: [EstudianteController],
   providers: [EstudianteService],
