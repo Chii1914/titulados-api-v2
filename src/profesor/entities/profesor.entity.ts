@@ -1,9 +1,10 @@
+import { forwardRef } from '@nestjs/common';
 import { Column, Entity, OneToMany } from "typeorm";
 import { Asignaciones } from "../../asignaciones/entities/asignacione.entity";
 
 @Entity("profesor", { schema: "tituladosv2" })
 export class Profesor {
-  @Column("varchar", { primary: true, name: "mail", length: 255 })
+ @Column("varchar", { primary: true, name: "mail", length: 255 })
   mail: string;
 
   @Column("varchar", { name: "nombre", length: 100 })
@@ -17,6 +18,13 @@ export class Profesor {
 
   @Column("varchar", { name: "segundoApellido", nullable: true, length: 100 })
   segundoApellido: string | null;
+
+  @Column("enum", {
+    name: "sede",
+    nullable: true,
+    enum: ["valparaiso", "santiago", "sanFelipe", "all"],
+  })
+  sede: "valparaiso" | "santiago" | "sanFelipe" | "all" | null;
 
   @OneToMany(() => Asignaciones, (asignaciones) => asignaciones.mailProfesor2)
   asignaciones: Asignaciones[];

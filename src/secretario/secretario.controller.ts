@@ -17,9 +17,9 @@ export class SecretarioController {
     return this.secretarioService.findAll();
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.secretarioService.findOne(+id);
+  @Get(':mail')
+  async findOne(@Param('mail') mail: string) {
+    return await this.secretarioService.findOne(mail);
   }
 
   @Patch(':id')
